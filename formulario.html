@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Datos Personales</title>
+    <link rel="stylesheet" href="style.css" id="standard-style">
+    <link rel="stylesheet" href="high-contrast.css" id="high-contrast-style" disabled>
+    <style>
+        /* Ocultar el botón de Estilo Normal por defecto */
+        #btn-normal {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Datos Personales</h1>
+    <form id="personal-data-form">
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </div>
+        <div class="form-group">
+            <label for="apellido">Apellido:</label>
+            <input type="text" id="apellido" name="apellido" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="fechaNacimiento">Fecha de nacimiento:</label>
+            <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+        </div>
+        <div class="form-group">
+            <label for="paisResidencia">País de residencia:</label>
+            <input type="text" id="paisResidencia" name="paisResidencia" required>
+        </div>
+        <button type="submit">Enviar</button>
+        <button type="button" onclick="toggleContrast()">Alto Contraste</button>
+        <button type="button" id="btn-normal" onclick="toggleNormal()">Estilo Normal</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const formulario = document.getElementById('personal-data-form');
+
+            formulario.addEventListener('submit', (event) => {
+                event.preventDefault(); // Evitar el envío inmediato del formulario
+
+                const nombre = document.getElementById('nombre').value;
+                const apellido = document.getElementById('apellido').value;
+                const email = document.getElementById('email').value;
+                const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+                const paisResidencia = document.getElementById('paisResidencia').value;
+
+                // Validaciones
+                if (!/^[a-zA-Z ]+$/.test(nombre) || !/^[a-zA-Z ]+$/.test(apellido)) {
+                    alert('Nombre y apellido deben contener solo letras y espacios.');
+                    return;
+                }
+
+                if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/.test(email)) {
+                    alert('Correo electrónico inválido. Debe seguir el formato: nombre@dominio.com');
+                    return;
+                }
+
+                const fechaNacimientoUsuario = new Date(fechaNacimiento);
+                const fechaNacimientoMin = new Date();
+                fechaNacimientoMin.setFullYear(fechaNacimientoMin.getFullYear() - 18);
+                
+                if (fechaNacimientoUsuario > fechaNacimientoMin) {
+                    alert('Debes tener al menos 18 años para enviar el formulario.');
+                    return;
+                }
+
+                if (paisResidencia === '') {
+                    alert('Por favor, seleccione un país de residencia.');
+                    return;
+                }
+
+                // Si todas las validaciones son correctas, se permite el envío del formulario
+                formulario.submit();
+            });
+
+            // Mostrar botón de Estilo Normal y ocultar Alto Contraste por defecto
+            document.getElementById('btn-normal').style.display = 'none';
+        });
+
+        function toggleContrast() {
+            var standardStyle = document.getElementById('standard-style');
+            var highContrastStyle = document.getElementById('high-contrast-style');
+            
+            standardStyle.disabled = true;
+            highContrastStyle.disabled = false;
+
+            // Mostrar botón de Estilo Normal y ocultar Alto Contraste
+            document.getElementById('btn-normal').style.display = 'inline-block';
+            document.querySelector('button[type="button"]:first-of-type').style.display = 'none';
+        }
+
+        function toggleNormal() {
+            var standardStyle = document.getElementById('standard-style');
+            var highContrastStyle = document.getElementById('high-contrast-style');
+            
+            standardStyle.disabled = false;
+            highContrastStyle.disabled = true;
+
+            // Mostrar botón de Alto Contraste y ocultar Estilo Normal
+            document.getElementById('btn-normal').style.display = 'none';
+            document.querySelector('button[type="button"]:first-of-type').style.display = 'inline-block';
+        }
+    </script>
+</body>
+</html>
